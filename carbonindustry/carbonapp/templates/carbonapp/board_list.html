@@ -1,7 +1,18 @@
 {% extends "carbonapp/base.html" %}
 {% block title %}목록{% endblock title %}
 {% block content %}
-
+<div> <!--이 영역에 class 주고 디자인 적용가능 -->
+<form action="{% url 'carbonfarm:search' %}">
+    {{ search_form }}
+    <button type="submit">검색</button>
+</form>
+{% if object_list_size %}
+<p>
+    검색 결과({{object_list_size}}개 찾음)
+    <a href="{% url 'carbonfarm:list' %}"><button>목록으로</button></a>
+</p>
+{% endif %}
+</div>
 <table border="1">
     <tr>
         <th>번호</th>
@@ -19,4 +30,25 @@
     {% endfor %}
 </table>
 <a href="{% url 'carbonfarm:create' %}"><button>글쓰기</button></a>
+<p>
+     {% if is_paginated %} <!-- 페이징 정보가 있다면 -->
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.next_page_number}}&keyword={{keyword}}">&laquo;</a>
+        {% else %}
+            &laquo;
+        {% endif %}
+        {% for i in paginator.page_range %}
+            {% if page_obj.number == i %}
+            <span style="color:red">[{{ i }}]</span>
+            {% elif i > page_obj.number|add:"-2" and i < page_obj.number|add:"2" %}
+            <a href="?page{{ i }}&keyword={{keyword}}">[{{ i }}]</a>
+        {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}&keyword={{keyword}}">&raquo;</a>
+        {% else %}
+            &laquo;
+        {% endif %}
+    {% endif %}
+</p>
 {% endblock content %}

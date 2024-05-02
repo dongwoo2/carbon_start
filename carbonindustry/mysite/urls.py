@@ -25,5 +25,6 @@ def trigger_error(request):
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("carbonfarm/", include("carbonapp.urls")),
+    path("kakaopai/", include("kakaopai.urls")),
     path("sentry-debug/", trigger_error),
 ]
